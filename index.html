@@ -3,25 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SISTEMATIZA - História de Salinas</title>
+    <title>SISTEMATIZA - História de Salinas da Margarida</title>
     
     <script src="https://cdn.jsdelivr.net/npm/pouchdb@8.0.1/dist/pouchdb.min.js"></script>
     
     <style>
         :root {
             --primary-color: #2c3e50;
-            --accent-color: #27ae60;
-            --error-color: #e74c3c;
-            --bg-color: #f4f7f6;
+            --accent-green: #27ae60;
+            --accent-red: #e74c3c;
+            --bg-paper: #fdfdfd;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
+            font-family: 'Georgia', serif;
+            background-color: #f4f1ea;
             color: var(--primary-color);
             margin: 0;
             padding: 20px;
-            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            border-radius: 4px;
         }
 
         header {
@@ -29,91 +37,70 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 10px;
+            padding-bottom: 15px;
             margin-bottom: 30px;
         }
 
-        h1 { margin: 0; font-size: 1.8rem; }
-        
-        /* Estilização da Nuvem de Status */
-        #status-conexao {
-            font-size: 2.2rem;
-            cursor: help;
-            transition: all 0.4s ease;
-            filter: grayscale(100%);
-            opacity: 0.6;
-        }
+        h1 { margin: 0; font-variant: small-caps; letter-spacing: 2px; }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
+        /* A Nuvem com efeito de brilho (Glow) */
+        #status-conexao {
+            font-size: 2.5rem;
+            cursor: help;
+            transition: all 0.6s ease;
+            filter: drop-shadow(0 0 2px #7f8c8d);
         }
 
         .secao-entrada {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
+            background: #f9f9f9;
+            padding: 25px;
+            border: 1px solid #ddd;
+            margin-bottom: 40px;
         }
 
         input, textarea {
             width: 100%;
             padding: 12px;
             margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-size: 1rem;
+            border: 1px solid #ccc;
+            background: var(--bg-paper);
+            font-family: inherit;
+            font-size: 1.1rem;
         }
 
         button {
             background-color: var(--primary-color);
             color: white;
-            padding: 12px 20px;
+            padding: 15px;
             border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
             width: 100%;
-            transition: background 0.3s;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            text-transform: uppercase;
         }
 
-        button:hover {
-            background-color: #34495e;
-        }
+        button:hover { background-color: #34495e; }
 
-        /* Estilo dos Cards de Registro Histórico */
+        /* Cards de Registro */
         .card-registro {
-            background: white;
-            border-left: 5px solid var(--primary-color);
+            border-left: 4px solid var(--primary-color);
             padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 4px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            position: relative;
+            margin-bottom: 25px;
+            background: #fff;
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.05);
         }
 
-        .data-registro {
-            font-size: 0.85rem;
-            color: #7f8c8d;
-            display: block;
-            margin-bottom: 10px;
-        }
-
+        .data-registro { font-size: 0.8rem; color: #666; font-style: italic; }
+        
         .btn-excluir {
             background: none;
-            color: var(--error-color);
-            border: 1px solid var(--error-color);
+            color: var(--accent-red);
+            border: 1px solid var(--accent-red);
             width: auto;
             padding: 5px 10px;
+            margin-top: 15px;
             font-size: 0.8rem;
-            margin-top: 10px;
-        }
-
-        .btn-excluir:hover {
-            background: var(--error-color);
-            color: white;
         }
     </style>
 </head>
@@ -123,17 +110,16 @@
     <header>
         <div>
             <h1>SISTEMATIZA</h1>
-            <small>Arquivo Vivo: Salinas da Margarida</small>
+            <small>Arquivo de Memória Viva de Salinas da Margarida</small>
         </div>
-        <div id="status-conexao" title="Status da Sincronização">☁️</div>
+        <div id="status-conexao" title="Aguardando inicialização...">☁️</div>
     </header>
 
     <main>
         <section class="secao-entrada">
-            <h3>Novo Fragmento Histórico</h3>
-            <input type="text" id="titulo" placeholder="Título do Evento ou Documento (ex: Denúncia de 1969)">
-            <textarea id="conteudo" rows="5" placeholder="Descreva aqui os detalhes, o contexto político e as observações da pesquisa..."></textarea>
-            <button id="btnSalvar">Preservar no Arquivo</button>
+            <input type="text" id="titulo" placeholder="Título do Registro (Ex: A demolição da escola em 1969)">
+            <textarea id="conteudo" rows="6" placeholder="Transcreva aqui o documento, a denúncia ou a análise histórica..."></textarea>
+            <button id="btnSalvar">Arquivar Documento</button>
         </section>
 
         <section id="lista">
@@ -142,6 +128,5 @@
 </div>
 
 <script src="app.js"></script>
-
 </body>
 </html>
