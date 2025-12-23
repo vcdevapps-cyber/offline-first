@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistematiza - Memória de Salinas</title>
+    <link rel="manifest" href="manifest.json">
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=EB+Garamond:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cor-papel: #f4ece1;
+            --cor-tinta: #2c2c2c;
+            --cor-borda: #d4c5b0;
+            --cor-destaque: #8b4513;
+        }
+
+        body {
+            background-color: #e5d9c6;
+            font-family: 'EB Garamond', serif;
+            color: var(--cor-tinta);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            background-color: var(--cor-papel);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid var(--cor-borda);
+            min-height: 100vh;
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 2px double var(--cor-destaque);
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+        }
+
+        h1 {
+            font-family: 'Special Elite', cursive;
+            font-size: 2rem;
+            margin: 0;
+            color: var(--cor-destaque);
+        }
+
+        .form-historico {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        input, textarea {
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid var(--cor-borda);
+            font-family: 'EB Garamond', serif;
+            font-size: 1.2rem;
+            padding: 10px;
+            outline: none;
+        }
+
+        textarea {
+            border: 1px solid var(--cor-borda);
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        button {
+            font-family: 'Special Elite', cursive;
+            background-color: var(--cor-destaque);
+            color: white;
+            border: none;
+            padding: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #5d2e0d;
+        }
+
+        .lista-registros {
+            margin-top: 30px;
+        }
+
+        .card-registro {
+            border-left: 3px solid var(--cor-destaque);
+            padding-left: 15px;
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        .data-registro {
+            font-family: 'Special Elite', cursive;
+            font-size: 0.8rem;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>SISTEMATIZA</h1>
+        <p>Arquivo Digital da História de Salinas da Margarida</p>
+    </header>
+
+    <div class="form-historico">
+        <input type="text" id="titulo" placeholder="Título do Documento/Fato...">
+        <textarea id="conteudo" placeholder="Descreva aqui o registro histórico, as fontes e observações..."></textarea>
+        <button onclick="adicionarRegistro()">REGISTRAR NO ARQUIVO</button>
+    </div>
+
+    <hr>
+
+    <div id="lista" class="lista-registros">
+        </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/pouchdb@8.0.1/dist/pouchdb.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
