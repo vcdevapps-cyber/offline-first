@@ -3,144 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#8b4513">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>SISTEMATIZA - História de Salinas</title>
     
-    <title>Sistematiza - Salinas</title>
-
-    <link rel="manifest" href="manifest.json">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=EB+Garamond:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/pouchdb@8.0.1/dist/pouchdb.min.js"></script>
     
     <style>
         :root {
-            --cor-papel: #f4ece1;
-            --cor-tinta: #2c2c2c;
-            --cor-borda: #d4c5b0;
-            --cor-destaque: #8b4513;
+            --primary-color: #2c3e50;
+            --accent-color: #27ae60;
+            --error-color: #e74c3c;
+            --bg-color: #f4f7f6;
         }
 
         body {
-            background-color: #e5d9c6;
-            font-family: 'EB Garamond', serif;
-            color: var(--cor-tinta);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
             margin: 0;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .container {
-            background-color: var(--cor-papel);
-            max-width: 850px;
-            width: 100%;
-            padding: 30px;
-            box-sizing: border-box;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            border: 1px solid var(--cor-borda);
-            min-height: 95vh;
-            margin-top: 10px;
-        }
-
-        header {
-            text-align: center;
-            border-bottom: 3px double var(--cor-destaque);
-            margin-bottom: 30px;
-            padding-bottom: 15px;
-        }
-
-        h1 {
-            font-family: 'Special Elite', cursive;
-            font-size: 2.2rem;
-            margin: 0;
-            color: var(--cor-destaque);
-            letter-spacing: 2px;
-        }
-
-        .form-historico {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            background: rgba(255,255,255,0.3);
             padding: 20px;
-            border-radius: 4px;
-        }
-
-        input, textarea {
-            background: transparent;
-            border: none;
-            border-bottom: 1px solid var(--cor-borda);
-            font-family: 'EB Garamond', serif;
-            font-size: 1.25rem;
-            padding: 12px;
-            outline: none;
-            transition: border-color 0.3s;
-        }
-
-        input:focus, textarea:focus {
-            border-bottom: 1px solid var(--cor-destaque);
-        }
-
-        textarea {
-            border: 1px solid var(--cor-borda);
-            min-height: 180px;
             line-height: 1.6;
         }
 
-        button {
-            font-family: 'Special Elite', cursive;
-            background-color: var(--cor-destaque);
-            color: white;
-            border: none;
-            padding: 15px;
-            cursor: pointer;
-            font-size: 1.1rem;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
-            transition: transform 0.1s, background-color 0.3s;
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
         }
 
-        button:active {
-            transform: scale(0.98);
+        h1 { margin: 0; font-size: 1.8rem; }
+        
+        /* Estilização da Nuvem de Status */
+        #status-conexao {
+            font-size: 2.2rem;
+            cursor: help;
+            transition: all 0.4s ease;
+            filter: grayscale(100%);
+            opacity: 0.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .secao-entrada {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 1rem;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+            transition: background 0.3s;
         }
 
         button:hover {
-            background-color: #5d2e0d;
+            background-color: #34495e;
         }
 
-        hr {
-            border: 0;
-            height: 1px;
-            background-image: linear-gradient(to right, transparent, var(--cor-borda), transparent);
-            margin: 40px 0;
-        }
-
+        /* Estilo dos Cards de Registro Histórico */
         .card-registro {
-            border-left: 4px solid var(--cor-destaque);
-            padding-left: 20px;
-            margin-bottom: 30px;
+            background: white;
+            border-left: 5px solid var(--primary-color);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
             position: relative;
-            background: rgba(255,255,255,0.2);
-            padding-top: 10px;
-            padding-bottom: 10px;
         }
 
         .data-registro {
-            font-family: 'Special Elite', cursive;
             font-size: 0.85rem;
-            color: #666;
+            color: #7f8c8d;
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
         }
 
         .btn-excluir {
             background: none;
-            color: #a00;
-            box-shadow: none;
+            color: var(--error-color);
+            border: 1px solid var(--error-color);
+            width: auto;
+            padding: 5px 10px;
             font-size: 0.8rem;
-            padding: 0;
             margin-top: 10px;
+        }
+
+        .btn-excluir:hover {
+            background: var(--error-color);
+            color: white;
         }
     </style>
 </head>
@@ -148,33 +121,25 @@
 
 <div class="container">
     <header>
-        <h1>SISTEMATIZA</h1>
-        <p style="font-style: italic;">Memória Viva de Salinas da Margarida</p>
+        <div>
+            <h1>SISTEMATIZA</h1>
+            <small>Arquivo Vivo: Salinas da Margarida</small>
+        </div>
+        <div id="status-conexao" title="Status da Sincronização">☁️</div>
     </header>
 
-    <div class="form-historico">
-        <input type="text" id="titulo" placeholder="Assunto ou Documento (ex: CGI 1969)">
-        <textarea id="conteudo" placeholder="Transcreva aqui as evidências, reflexões ou depoimentos..."></textarea>
-        <button id="btnSalvar">ARQUIVAR REGISTRO</button>
-    </div>
+    <main>
+        <section class="secao-entrada">
+            <h3>Novo Fragmento Histórico</h3>
+            <input type="text" id="titulo" placeholder="Título do Evento ou Documento (ex: Denúncia de 1969)">
+            <textarea id="conteudo" rows="5" placeholder="Descreva aqui os detalhes, o contexto político e as observações da pesquisa..."></textarea>
+            <button id="btnSalvar">Preservar no Arquivo</button>
+        </section>
 
-    <hr>
-
-    <div id="lista" class="lista-registros">
-        </div>
+        <section id="lista">
+            </section>
+    </main>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/pouchdb@8.0.1/dist/pouchdb.min.js"></script>
-
-<script>
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js')
-                .then(reg => console.log('Sistematiza: Registro de Arquivo OK'))
-                .catch(err => console.log('Sistematiza: Erro no Registro', err));
-        });
-    }
-</script>
 
 <script src="app.js"></script>
 
