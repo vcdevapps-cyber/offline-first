@@ -3,9 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistematiza - Memória de Salinas</title>
+    <meta name="theme-color" content="#8b4513">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <title>Sistematiza - Salinas</title>
+
     <link rel="manifest" href="manifest.json">
+    
     <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=EB+Garamond:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
     <style>
         :root {
             --cor-papel: #f4ece1;
@@ -19,7 +26,7 @@
             font-family: 'EB Garamond', serif;
             color: var(--cor-tinta);
             margin: 0;
-            padding: 20px;
+            padding: 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -27,33 +34,38 @@
 
         .container {
             background-color: var(--cor-papel);
-            max-width: 800px;
+            max-width: 850px;
             width: 100%;
-            padding: 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 30px;
+            box-sizing: border-box;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
             border: 1px solid var(--cor-borda);
-            min-height: 100vh;
+            min-height: 95vh;
+            margin-top: 10px;
         }
 
         header {
             text-align: center;
-            border-bottom: 2px double var(--cor-destaque);
+            border-bottom: 3px double var(--cor-destaque);
             margin-bottom: 30px;
-            padding-bottom: 10px;
+            padding-bottom: 15px;
         }
 
         h1 {
             font-family: 'Special Elite', cursive;
-            font-size: 2rem;
+            font-size: 2.2rem;
             margin: 0;
             color: var(--cor-destaque);
+            letter-spacing: 2px;
         }
 
         .form-historico {
             display: flex;
             flex-direction: column;
             gap: 15px;
-            margin-bottom: 40px;
+            background: rgba(255,255,255,0.3);
+            padding: 20px;
+            border-radius: 4px;
         }
 
         input, textarea {
@@ -61,15 +73,20 @@
             border: none;
             border-bottom: 1px solid var(--cor-borda);
             font-family: 'EB Garamond', serif;
-            font-size: 1.2rem;
-            padding: 10px;
+            font-size: 1.25rem;
+            padding: 12px;
             outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus {
+            border-bottom: 1px solid var(--cor-destaque);
         }
 
         textarea {
             border: 1px solid var(--cor-borda);
-            min-height: 150px;
-            resize: vertical;
+            min-height: 180px;
+            line-height: 1.6;
         }
 
         button {
@@ -77,33 +94,53 @@
             background-color: var(--cor-destaque);
             color: white;
             border: none;
-            padding: 12px;
+            padding: 15px;
             cursor: pointer;
-            transition: 0.3s;
-            margin-top: 10px;
+            font-size: 1.1rem;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+            transition: transform 0.1s, background-color 0.3s;
+        }
+
+        button:active {
+            transform: scale(0.98);
         }
 
         button:hover {
             background-color: #5d2e0d;
         }
 
-        .lista-registros {
-            margin-top: 30px;
+        hr {
+            border: 0;
+            height: 1px;
+            background-image: linear-gradient(to right, transparent, var(--cor-borda), transparent);
+            margin: 40px 0;
         }
 
         .card-registro {
-            border-left: 3px solid var(--cor-destaque);
-            padding-left: 15px;
-            margin-bottom: 25px;
-            font-size: 1.1rem;
-            line-height: 1.6;
+            border-left: 4px solid var(--cor-destaque);
+            padding-left: 20px;
+            margin-bottom: 30px;
             position: relative;
+            background: rgba(255,255,255,0.2);
+            padding-top: 10px;
+            padding-bottom: 10px;
         }
 
         .data-registro {
             font-family: 'Special Elite', cursive;
+            font-size: 0.85rem;
+            color: #666;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .btn-excluir {
+            background: none;
+            color: #a00;
+            box-shadow: none;
             font-size: 0.8rem;
-            color: #777;
+            padding: 0;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -112,13 +149,13 @@
 <div class="container">
     <header>
         <h1>SISTEMATIZA</h1>
-        <p>Arquivo Digital da História de Salinas da Margarida</p>
+        <p style="font-style: italic;">Memória Viva de Salinas da Margarida</p>
     </header>
 
     <div class="form-historico">
-        <input type="text" id="titulo" placeholder="Título do Documento/Fato...">
-        <textarea id="conteudo" placeholder="Descreva aqui o registro histórico, as fontes e observações..."></textarea>
-        <button onclick="adicionarRegistro()">REGISTRAR NO ARQUIVO</button>
+        <input type="text" id="titulo" placeholder="Assunto ou Documento (ex: CGI 1969)">
+        <textarea id="conteudo" placeholder="Transcreva aqui as evidências, reflexões ou depoimentos..."></textarea>
+        <button id="btnSalvar">ARQUIVAR REGISTRO</button>
     </div>
 
     <hr>
@@ -128,6 +165,18 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/pouchdb@8.0.1/dist/pouchdb.min.js"></script>
+
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js')
+                .then(reg => console.log('Sistematiza: Registro de Arquivo OK'))
+                .catch(err => console.log('Sistematiza: Erro no Registro', err));
+        });
+    }
+</script>
+
 <script src="app.js"></script>
+
 </body>
 </html>
